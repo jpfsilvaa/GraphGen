@@ -1,0 +1,57 @@
+{
+    "UserVMs": [
+        {
+            "vId": "v0",
+            "vmType": "gp1",
+            "bid": 99.61309999266508,
+            "avgSpeed": 16,
+            "initialPos": [
+                "n0",
+                "n0"
+            ],
+            "route": [
+                "n0",
+                "n2",
+                "n3",
+                "n5"
+            ],
+            "v_storage": 3072,
+            "v_CPU": 4000,
+            "v_RAM": 4096
+        }
+    ],
+    "Cloudlets": [
+        {
+            "cId": "cA_0",
+            "node": "n0",
+            "coverageArea": 50,
+            "c_storage": 256000,
+            "c_CPU": 24000,
+            "c_RAM": 16384
+        },
+        {
+            "cId": "cA_1",
+            "node": "n2",
+            "coverageArea": 50,
+            "c_storage": 256000,
+            "c_CPU": 24000,
+            "c_RAM": 16384
+        },
+        {
+            "cId": "cA_2",
+            "node": "n3",
+            "coverageArea": 70,
+            "c_storage": 256000,
+            "c_CPU": 24000,
+            "c_RAM": 16384
+        },
+        {
+            "cId": "cA_3",
+            "node": "n5",
+            "coverageArea": 30,
+            "c_storage": 256000,
+            "c_CPU": 24000,
+            "c_RAM": 16384
+        }
+    ]
+}
