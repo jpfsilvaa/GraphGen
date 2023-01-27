@@ -7,3 +7,5 @@ class UserVM:
         self.initPos = initPos
         self.route = route
         self.reqs = reqs
+        # self.connectedCloudlet
+        # self.allocatedCloudlet

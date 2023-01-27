@@ -1,29 +1,23 @@
 from classes.Graph import Graph
 from classes.Node import Node
 import utils.json_utils as json_utils
+import utils.pycgr_utils as pycgr_utils
 import sys
 
-def createGraph():
-    nNodes = int(input())
-    graphNodes = []
-    for _ in range(nNodes):
-        line = input().split(' ')
-        graphNodes.append(Node(nId=line[0],
-                            posX=int(line[1]),
-                            posY=int(line[2])))
-    graph = Graph(graphNodes)
+def createGraph(graphFilePath):
 
-    nEdges = int(input())
-    for _ in range(nEdges):
-        line = input().split(' ')
-        node1 = graph.findNodeById(line[0])
-        node2 = graph.findNodeById(line[1])
-        weight = int(line[2])
-        graph.addEdge(node1, node2, weight)
+    nodes, edges = pycgr_utils.readNodesAndEdges(graphFilePath)
+    graph = Graph(nodes)
+
+    for e in edges:
+        node_1 = e[0]
+        node_2 = e[1]
+        weight = e[2] # distance
+        graph.addEdge(graph.findNodeById(node_1), graph.findNodeById(node_2), float(weight))
     return graph
 
-def main(jsonFilePath):
-    mainGraph = createGraph()
+def main(jsonFilePath, graphFilePath):
+    mainGraph = createGraph(graphFilePath)
     mainGraph.printAdjList()
         
     jsonData = json_utils.readJsonInput(jsonFilePath)
@@ -39,8 +33,11 @@ def main(jsonFilePath):
         curr = mainGraph.getSubgraph(userRouteNodes)
         usersRoutes.append(curr)
 
-    # output: mainGraph, cloudlets, users, cloudletsSubgraph, usersRoutes
+    # output: mainGraph, cloudlets, users, cloudletsSubgraph, usersRoutes objects
 
 if __name__ == '__main__':
-    inputFilePath = sys.argv[1:][0]
-    main(inputFilePath)
+    jsonFilePath = sys.argv[1:][0]
+    print(jsonFilePath)
+    graphFilePath = sys.argv[1:][1]
+    print(graphFilePath)
+    main(jsonFilePath, graphFilePath)
