@@ -6,14 +6,14 @@
             "bid": 99.61309999266508,
             "avgSpeed": 16,
             "initialPos": [
-                "n0",
-                "n0"
+                "0",
+                "0"
             ],
             "route": [
-                "n0",
-                "n2",
-                "n3",
-                "n5"
+                "0",
+                "2",
+                "3",
+                "5"
             ],
             "v_storage": 3072,
             "v_CPU": 4000,
@@ -23,7 +23,7 @@
     "Cloudlets": [
         {
             "cId": "cA_0",
-            "node": "n0",
+            "node": "0",
             "coverageArea": 50,
             "c_storage": 256000,
             "c_CPU": 24000,
@@ -31,7 +31,7 @@
         },
         {
             "cId": "cA_1",
-            "node": "n2",
+            "node": "2",
             "coverageArea": 50,
             "c_storage": 256000,
             "c_CPU": 24000,
@@ -39,7 +39,7 @@
         },
         {
             "cId": "cA_2",
-            "node": "n3",
+            "node": "3",
             "coverageArea": 70,
             "c_storage": 256000,
             "c_CPU": 24000,
@@ -47,7 +47,7 @@
         },
         {
             "cId": "cA_3",
-            "node": "n5",
+            "node": "5",
             "coverageArea": 30,
             "c_storage": 256000,
             "c_CPU": 24000,
