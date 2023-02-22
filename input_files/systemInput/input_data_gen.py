@@ -13,7 +13,7 @@ def vmGen(vmsQtt):
         "vmType": 'gp1',
         "bid": random.gauss(100, 3),
         "avgSpeed": 16,
-        "initialPos": ('n0', 'n0'),
+        "initialTime": 0,
         "route": ('n0', 'n2', 'n3', 'n5'),
         "v_storage": 3 * 1024, 
         "v_CPU": 2 * simMIPS, 

@@ -29,7 +29,7 @@ def buildUserVms(jsonData):
                             str(user['vmType']),
                             int(user['bid']),
                             int(user['avgSpeed']),
-                            user['initialPos'],
+                            user['initialTime'],
                             user['route'],
                             Resources(int(user['v_CPU']), 
                             int(user['v_RAM']),

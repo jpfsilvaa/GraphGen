@@ -4,3 +4,4 @@ class Cloudlet:
         self.nodeId = nodeId
         self.coverageArea = coverageArea
         self.resources = resources
+        self.currUsersAllocated = []
