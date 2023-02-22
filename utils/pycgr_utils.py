@@ -1,4 +1,4 @@
-from classes.Node import Node
+from GraphGen.classes.node import Node
 
 def readNodesAndEdges(inputFilePath):
     with open(inputFilePath, "r") as f:

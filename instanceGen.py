@@ -1,10 +1,13 @@
-from classes.Graph import Graph
-from classes.Node import Node
-import utils.json_utils as json_utils
-import utils.pycgr_utils as pycgr_utils
+from GraphGen.classes.graph import Graph
+import GraphGen.classes.node
+import GraphGen.utils.json_utils as json_utils
+import GraphGen.utils.pycgr_utils as pycgr_utils
 import sys
 
+TAG = 'simMain'
+
 def createGraph(graphFilePath):
+    print(TAG, 'createGraph')
     nodes, edges = pycgr_utils.readNodesAndEdges(graphFilePath)
     graph = Graph(nodes)
 
@@ -16,6 +19,7 @@ def createGraph(graphFilePath):
     return graph
 
 def main(jsonFilePath, graphFilePath):
+    print(TAG, 'main')
     mainGraph = createGraph(graphFilePath)
     mainGraph.printAdjList()
         

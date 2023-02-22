@@ -1,7 +1,7 @@
 import json, math
-from classes.Cloudlet import Cloudlet
-from classes.Resources import Resources
-from classes.User import UserVM
+from GraphGen.classes.cloudlet import Cloudlet
+from GraphGen.classes.resources import Resources
+from GraphGen.classes.user import UserVM
 
 def readJsonInput(jsonFilePath):
     jsonFile = open(jsonFilePath)

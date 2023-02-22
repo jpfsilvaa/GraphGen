@@ -13,3 +13,4 @@ class UserVM:
         self.allocatedCloudlet = None
         self.currLatency = 0
         self.currNode = None
+        self.price = 0
