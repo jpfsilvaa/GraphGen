@@ -5,3 +5,7 @@ class Cloudlet:
         self.coverageArea = coverageArea
         self.resources = resources
         self.currUsersAllocated = []
+
+    @property
+    def description(self) -> str:
+        return f"ID: {self.cId} \nNODE POS: {self.nodeId} \nCURRENT USERS: {self.currUsersAllocated}"

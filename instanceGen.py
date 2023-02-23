@@ -4,7 +4,7 @@ import GraphGen.utils.json_utils as json_utils
 import GraphGen.utils.pycgr_utils as pycgr_utils
 import sys
 
-TAG = 'simMain'
+TAG = 'instanceGen.py:'
 
 def createGraph(graphFilePath):
     print(TAG, 'createGraph')
@@ -21,7 +21,7 @@ def createGraph(graphFilePath):
 def main(jsonFilePath, graphFilePath):
     print(TAG, 'main')
     mainGraph = createGraph(graphFilePath)
-    mainGraph.printAdjList()
+    # mainGraph.printAdjList()
         
     jsonData = json_utils.readJsonInput(jsonFilePath)
     cloudlets = json_utils.buildCloudlets(jsonData['Cloudlets'])
