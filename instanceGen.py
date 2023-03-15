@@ -30,7 +30,7 @@ def main(jsonFilePath, graphFilePath):
 
     """ 
     In fact, these subgraphs might be useful but I don't really need to return it...
-    I can make then when necessary through the main graph
+    I can make them when necessary through the main graph
     cloudletsNodes = [mainGraph.findNodeById(c.nodeId) for c in cloudlets]
     cloudletsSubgraph = mainGraph.getSubgraph(cloudletsNodes)
     

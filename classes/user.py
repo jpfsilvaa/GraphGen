@@ -11,6 +11,7 @@ class UserVM:
         self.reqsSum = 0
         # self.connectedCloudlet
         self.allocatedCloudlet = None
+        self.pastCloudlets = list()
         self.currLatency = 0
         self.currNodeId = route[0]
         self.price = 0
