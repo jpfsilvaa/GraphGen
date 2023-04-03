@@ -278,33 +278,34 @@
     ],
     "Cloudlets": [
         {
-            "cId": "cA_0",
-            "node": "n0",
-            "coverageRadius": 50,
+            "cId": "c0",
+            "position": [
+                "326871.593575",
+                "7386926.86176"
+            ],
+            "coverageRadius": 500,
             "c_storage": 256000,
             "c_CPU": 24000,
             "c_RAM": 16384
         },
         {
-            "cId": "cA_1",
-            "node": "n2",
-            "coverageRadius": 50,
+            "cId": "c1",
+            "position": [
+                " 326649.044412",
+                " 7387010.2768"
+            ],
+            "coverageRadius": 500,
             "c_storage": 256000,
             "c_CPU": 24000,
             "c_RAM": 16384
         },
         {
-            "cId": "cA_2",
-            "node": "n3",
-            "coverageRadius": 70,
-            "c_storage": 256000,
-            "c_CPU": 24000,
-            "c_RAM": 16384
-        },
-        {
-            "cId": "cA_3",
-            "node": "n5",
-            "coverageRadius": 30,
+            "cId": "c2",
+            "position": [
+                "334082.15071",
+                "7389374.2529"
+            ],
+            "coverageRadius": 500,
             "c_storage": 256000,
             "c_CPU": 24000,
             "c_RAM": 16384
