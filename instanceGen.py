@@ -1,13 +1,15 @@
-from classes.graph import Graph
-from classes.node import Node
+from GraphGen.classes.graph import Graph
+import GraphGen.classes.node
+import GraphGen.utils.json_utils as json_utils
+import GraphGen.utils.pycgr_utils as pycgr_utils
 import sys
-# import sim_utils
+import sim_utils
 
 TAG = 'instanceGen.py:'
 
 def createGraph(graphFilePath):
-    # sim_utils.log(TAG, 'createGraph')
-    nodes, edges = xmlParser.readNodesAndEdges(graphFilePath)
+    sim_utils.log(TAG, 'createGraph')
+    nodes, edges = pycgr_utils.readNodesAndEdges(graphFilePath)
     graph = Graph(nodes)
 
     for e in edges:
@@ -18,13 +20,13 @@ def createGraph(graphFilePath):
     return graph
 
 def main(jsonFilePath, graphFilePath):
-    # sim_utils.log(TAG, 'main')
+    sim_utils.log(TAG, 'main')
     mainGraph = createGraph(graphFilePath)
-    mainGraph.printAdjList()
-        
-    # jsonData = json_utils.readJsonInput(jsonFilePath)
-    # cloudlets = json_utils.buildCloudlets(jsonData['Cloudlets'])
-    # users = json_utils.buildUserVms(jsonData['UserVMs'])
+    # mainGraph.printAdjList()
+
+    jsonData = json_utils.readJsonInput(jsonFilePath)
+    cloudlets = json_utils.buildCloudlets(jsonData['Cloudlets'])
+    users = json_utils.buildUserVms(jsonData['UserVMs'])
 
     """ 
     In fact, these subgraphs might be useful but I don't really need to return it...
@@ -38,9 +40,9 @@ def main(jsonFilePath, graphFilePath):
         curr = mainGraph.getSubgraph(userRouteNodes)
         usersRoutes.append(curr) """
 
-    
 
-    # return [cloudlets, users, mainGraph]
+
+    return [cloudlets, users, mainGraph]
 
 if __name__ == '__main__':
     jsonFilePath = sys.argv[1:][0]
