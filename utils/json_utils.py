@@ -12,9 +12,9 @@ def readJsonInput(jsonFilePath):
 def buildCloudlets(jsonData):
     cloudlets = []
     for cloudlet in jsonData:
-        cloudlets.append(Cloudlet(str(cloudlet['cId']),
-                            str(cloudlet['node']),
-                            int(cloudlet['coverageArea']),
+        cloudlets.append(Cloudlet(cloudlet['cId'],
+                            (float(cloudlet['position'][0]), float(cloudlet['position'][1])),
+                            int(cloudlet['coverageRadius']),
                             Resources(int(cloudlet['c_CPU']), 
                             int(cloudlet['c_RAM']),
                             int(cloudlet['c_storage']))

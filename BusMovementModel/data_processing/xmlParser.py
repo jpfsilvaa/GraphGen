@@ -1,5 +1,5 @@
 import xml.etree.ElementTree as ET
-from classes.node import Node
+from GraphGen.classes.node import Node
 
 def readNodesAndEdges(inputFilePath):
     tree = ET.parse(inputFilePath)
@@ -17,7 +17,16 @@ def readNodesAndEdges(inputFilePath):
 
         if child.tag == 'links':
             for link in child:
-                links.append((link.attrib['from'], link.attrib['to'], float(link.attrib['length'])))
+                avgSpeeds = [float(i) for i in link.attrib['avgspeed'].split(', ') if float(i) > 0]
+                
+                if len(avgSpeeds) == 0:
+                    linkAvgSpeed = 10
+                else:
+                    linkAvgSpeed = sum(avgSpeeds) / len(avgSpeeds)
+                links.append((link.attrib['from'], 
+                                link.attrib['to'], 
+                                float(link.attrib['length']),
+                                linkAvgSpeed))
     return nodes, links
 
 def readBusTraces(inputFilePath):
@@ -31,3 +40,16 @@ def readBusTraces(inputFilePath):
             busTrace = [int(i) for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
     return busTraces
+
+def readSubtraces(inputFilePath):
+    tree = ET.parse(inputFilePath)
+    root = tree.getroot()
+
+    pointsPerLink = {}
+    for child in root:
+        if child.tag == 'links':
+            for link in child:
+                latitudes = [lat for lat in link.attrib['shapeLat'].split(',')]
+                longitudes = [lng for lng in link.attrib['shapeLng'].split(',')]
+                pointsPerLink[link.attrib['id']] = [(lat, lng) for lat, lng in zip(latitudes, longitudes)]
+    return pointsPerLink  

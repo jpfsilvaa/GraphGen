@@ -13,10 +13,11 @@ class UserVM:
         # self.connectedCloudlet
         self.allocatedCloudlet = None
         self.pastCloudlets = list()
+        self.lastMove = (self.initTime, route[0])
         self.currLatency = 0
         self.currNodeId = route[0]
         self.price = 0
 
     @property
     def description(self) -> str:
-        return f"ID: {self.uId} \nROUTE: {self.route} \nALLOCATED CLOUDLET: {self.allocatedCloudlet} \nCURRENTE NODE POS: {self.currNodeId}"
+        return f"ID: {self.uId} \nROUTE: {self.route} \nALLOCATED CLOUDLET: {self.allocatedCloudlet} \nCURRENT NODE POS: {self.currNodeId}"

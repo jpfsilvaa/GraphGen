@@ -12,7 +12,7 @@ def readBusTraces(inputFilePath):
     for child in root:
         if child.tag == 'bus':
             busId = child.attrib['id']
-            busTrace = [int(i) for i in child.attrib['stops'].split(',')]
+            busTrace = [i for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
     return busTraces
 
@@ -32,12 +32,16 @@ def readSubtraces(inputFilePath):
 def getCloudletsPositions(subtraces):
     cloudletsPositions = []
     for link in subtraces:
-        # adiciono uma cloudlet a cada 8 pontos, porque a distancia entre cada ponto é, aprox., 50-70m
-        # então, como estou considerando o raio de cobertura como 500 metros, 8 pontos de distancia faz uma 
-        # intersecção de aprox. 200 metros entre elas
         for i in range(0, len(subtraces[link]), 8):
             cloudletsPositions.append(subtraces[link][i])
     return cloudletsPositions
+
+def routeGen(busTrace):
+    routeJumps = random.choice(range(int(len(busTrace) / 3), len(busTrace)))
+    route = []
+    for i in range(routeJumps):
+        route.append(busTrace[i])
+    return route
 
 def vmGen(vmsQtt, busFilePath):
     # units: storage(MB), cpu(MIPS), RAM(MB)
@@ -65,13 +69,6 @@ def vmGen(vmsQtt, busFilePath):
 
     return VMs
 
-def routeGen(busTrace):
-    routeJumps = random.choice(range(int(len(busTrace) / 3), len(busTrace)))
-    route = []
-    for i in range(routeJumps):
-        route.append(busTrace[i])
-    return route
-
 def cloudletGen(linksInputFilePath):
 
     subtraces = readSubtraces(linksInputFilePath)
@@ -90,57 +87,17 @@ def cloudletGen(linksInputFilePath):
             "c_RAM": 16 * 1024
         }
         Cloudlets.append(cloudlet)
-    
-    # # units: storage(MB), cpu(MIPS), RAM(MB)
-    # Cloudlets = []
-    # simMIPS = 2000
-    # clA0 = { "cId": "cA_0",
-    #     "node": "n0",
-    #     "coverageRadius": 500,
-    #     "c_storage": 250 * 1024, 
-    #     "c_CPU": 12 * simMIPS,
-    #     "c_RAM": 16 * 1024
-    # }
-
-    # clA1 = { "cId": "cA_1",
-    #     "node": "n2",
-    #     "coverageRadius": 500,
-    #     "c_storage": 250 * 1024, 
-    #     "c_CPU": 12 * simMIPS,
-    #     "c_RAM": 16 * 1024
-    # }
-
-    # clA2 = { "cId": "cA_2",
-    #     "node": "n3",
-    #     "coverageRadius": 500,
-    #     "c_storage": 250 * 1024, 
-    #     "c_CPU": 12 * simMIPS,
-    #     "c_RAM": 16 * 1024
-    # }
-
-    # clA3 = { "cId": "cA_3",
-    #     "node": "n5",
-    #     "coverageRadius": 500,
-    #     "c_storage": 250 * 1024, 
-    #     "c_CPU": 12 * simMIPS,
-    #     "c_RAM": 16 * 1024
-    # }
-
-    # Cloudlets.append(clA0)
-    # Cloudlets.append(clA1)
-    # Cloudlets.append(clA2)
-    # Cloudlets.append(clA3)
 
     return Cloudlets
 
 def build(args):
     vmsArg = int(args[0])
-    cloudletsArg = args[1]
+    linksFilePath = args[1]
     outFilePath = args[2]
     random.seed(args[3])
     busFilePath = args[4]
 
-    cloudlets = cloudletGen(cloudletsArg)
+    cloudlets = cloudletGen(linksFilePath)
     mainObject = {
                     "UserVMs": vmGen(vmsArg, busFilePath), 
                     "Cloudlets": cloudlets

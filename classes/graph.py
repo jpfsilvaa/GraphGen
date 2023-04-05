@@ -9,9 +9,9 @@ class Graph:
                 return i
         return None
 
-    def addEdge(self, n1, n2, weight=1):
-        self.adjList[n1][n2] = weight
-        self.adjList[n2][n1] = weight
+    def addEdge(self, n1, n2, weightAndSpeed):
+        self.adjList[n1][n2] = weightAndSpeed
+        self.adjList[n2][n1] = weightAndSpeed
 
     def printAdjList(self):
         for key in self.adjList.keys():
@@ -25,3 +25,6 @@ class Graph:
                 if node in subgraph.adjList.keys():
                     subgraph.addEdge(n, node, weight)
         return subgraph
+    
+    def getEdgeWeight(self, n1, n2):
+        return self.adjList[n1][n2]

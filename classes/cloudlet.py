@@ -1,5 +1,5 @@
 class Cloudlet:
-    def __init__(self, cId: str , nodeId: str, coverageArea: int, resources):
+    def __init__(self, cId: str , position: str, coverageArea: int, resources):
         self.cId = cId
         self.position = position
         self.coverageArea = coverageArea
@@ -8,4 +8,4 @@ class Cloudlet:
 
     @property
     def description(self) -> str:
-        return f"ID: {self.cId} \nNODE POS: {self.nodeId} \nCURRENT USERS: {self.currUsersAllocated}"
+        return f"ID: {self.cId} \nPOS: {self.position} \nCURRENT USERS: {self.currUsersAllocated}"
