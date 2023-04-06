@@ -17,7 +17,7 @@ def createGraph(graphFilePath):
         node_2 = e[1]
         distanceWeight = e[2]
         avgSpeed = e[3]
-        graph.addEdge(node_1, node_2, (float(weight), avgSpeed))
+        graph.addEdge(node_1, node_2, (float(distanceWeight), avgSpeed))
     return graph
 
 def main(jsonFilePath, graphFilePath):

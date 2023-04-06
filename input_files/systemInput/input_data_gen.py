@@ -26,7 +26,8 @@ def readSubtraces(inputFilePath):
             for link in child:
                 latitudes = [lat for lat in link.attrib['shapeLat'].split(',')]
                 longitudes = [lng for lng in link.attrib['shapeLng'].split(',')]
-                pointsPerLink[link.attrib['id']] = [(lat, lng) for lat, lng in zip(latitudes, longitudes)]
+                if len(latitudes) > 1 and len(longitudes) > 1:
+                    pointsPerLink[link.attrib['id']] = [(lat, lng) for lat, lng in zip(latitudes, longitudes)]
     return pointsPerLink            
 
 def getCloudletsPositions(subtraces):

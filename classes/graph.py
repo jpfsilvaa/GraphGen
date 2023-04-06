@@ -12,6 +12,8 @@ class Graph:
     def addEdge(self, n1, n2, weightAndSpeed):
         self.adjList[n1][n2] = weightAndSpeed
         self.adjList[n2][n1] = weightAndSpeed
+        self.adjList[n1][n1] = (0, weightAndSpeed[1])
+        self.adjList[n2][n2] = (0, weightAndSpeed[1])
 
     def printAdjList(self):
         for key in self.adjList.keys():
