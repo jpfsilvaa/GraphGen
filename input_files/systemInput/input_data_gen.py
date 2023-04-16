@@ -4,17 +4,23 @@ import sys
 from itertools import product
 import xml.etree.ElementTree as ET
 
+NUMBER_BUS_TRACES = 10
+
 def readBusTraces(inputFilePath):
     tree = ET.parse(inputFilePath)
     root = tree.getroot()
 
     busTraces = {}
+    chosenBusTraces = {}
     for child in root:
         if child.tag == 'bus':
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
-    return busTraces
+    chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)    
+    for bt in chosen:
+        chosenBusTraces[bt] = busTraces.pop(bt)
+    return chosenBusTraces
 
 def readSubtraces(inputFilePath):
     tree = ET.parse(inputFilePath)
@@ -33,7 +39,7 @@ def readSubtraces(inputFilePath):
 def getCloudletsPositions(subtraces):
     cloudletsPositions = []
     for link in subtraces:
-        for i in range(0, len(subtraces[link]), 8):
+        for i in range(0, len(subtraces[link]), 17):
             cloudletsPositions.append(subtraces[link][i])
     return cloudletsPositions
 
@@ -53,19 +59,56 @@ def vmGen(vmsQtt, busFilePath):
         busTraces = readBusTraces(busFilePath)
         chosenBus = random.choice(list(busTraces.keys()))
 
-        chosenVm = {
-            "vId": 'v' + str(i), 
+        gp1 = {
             "vmType": 'gp1',
-            "bid": random.gauss(100, 3),
-            "avgSpeed": 16,
-            "initialTime": 0,
-            "route": routeGen(busTraces[chosenBus]),
-            "busId": chosenBus,
+            "bid": random.gauss(100, 5),
             "v_storage": 3 * 1024, 
             "v_CPU": 2 * simMIPS, 
             "v_RAM": 4 * 1024
         }
-        VMs.append(chosenVm)
+
+        gp2 = {
+            "vmType": 'gp2',
+            "bid": random.gauss(100, 5),
+            "v_storage": 16 * 1024, 
+            "v_CPU": 4 * simMIPS, 
+            "v_RAM": 16 * 1024
+        }
+
+        ramIntensive = {
+            "vmType": 'ramIntensive',
+            "bid": random.gauss(150, 5),
+            "v_storage": 16 * 1024, 
+            "v_CPU": 8 * simMIPS, 
+            "v_RAM": 64 * 1024
+        }
+
+        cpuIntensive = {
+            "vmType": 'cpuIntensive',
+            "bid": random.gauss(150, 5),
+            "v_storage": 16 * 1024, 
+            "v_CPU": 16 * simMIPS, 
+            "v_RAM": 32 * 1024
+        }
+
+        vmTypes = [gp1, gp2, ramIntensive, cpuIntensive]
+        chosenVm = random.choice(vmTypes)
+
+        vm = {
+            "vId": 'v' + str(i), 
+            "vmType": chosenVm["vmType"],
+            "bid": int(chosenVm["bid"]),
+            "avgSpeed": 16,
+            "initialTime": 0,
+            "route": routeGen(busTraces[chosenBus]),
+            "busId": chosenBus,
+            "v_storage": chosenVm["v_storage"], 
+            "v_CPU": chosenVm["v_CPU"], 
+            "v_RAM": chosenVm["v_RAM"]
+        }
+
+        VMs.append(vm)
+        print("VM " + str(i) + " generated!")
 
 
     return VMs
@@ -83,9 +126,9 @@ def cloudletGen(linksInputFilePath):
             "cId": 'c' + str(c),
             "position": cloudletsPositions[c],
             "coverageRadius": 500,
-            "c_storage": 250 * 1024, 
-            "c_CPU": 12 * simMIPS,
-            "c_RAM": 16 * 1024
+            "c_storage": 512 * 1024, 
+            "c_CPU": 80 * simMIPS,
+            "c_RAM": 512 * 1024
         }
         Cloudlets.append(cloudlet)
 
