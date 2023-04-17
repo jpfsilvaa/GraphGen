@@ -15,7 +15,7 @@ class UserVM:
         self.pastCloudlets = list()
         self.lastMove = (self.initTime, route[0])
         self.currLatency = 0
-        self.latencyThresholdForAllocate = 1
+        self.latencyThresholdForAllocate = 0.3
         self.position = (0, 0)
         self.currNodeId = route[0]
         self.price = 0

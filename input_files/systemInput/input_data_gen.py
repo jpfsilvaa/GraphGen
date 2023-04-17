@@ -4,7 +4,7 @@ import sys
 from itertools import product
 import xml.etree.ElementTree as ET
 
-NUMBER_BUS_TRACES = 10
+NUMBER_BUS_TRACES = 5
 
 def readBusTraces(inputFilePath):
     tree = ET.parse(inputFilePath)
@@ -17,9 +17,10 @@ def readBusTraces(inputFilePath):
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
-    chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)    
+    chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
     for bt in chosen:
         chosenBusTraces[bt] = busTraces.pop(bt)
+    print("Chosen bus traces: " + str(chosenBusTraces.keys()))
     return chosenBusTraces
 
 def readSubtraces(inputFilePath):
@@ -54,9 +55,9 @@ def vmGen(vmsQtt, busFilePath):
     # units: storage(MB), cpu(MIPS), RAM(MB)
     VMs = []
     simMIPS = 2000
+    busTraces = readBusTraces(busFilePath)
 
     for i in range(vmsQtt):
-        busTraces = readBusTraces(busFilePath)
         chosenBus = random.choice(list(busTraces.keys()))
 
         gp1 = {
@@ -125,10 +126,10 @@ def cloudletGen(linksInputFilePath):
         cloudlet = {
             "cId": 'c' + str(c),
             "position": cloudletsPositions[c],
-            "coverageRadius": 500,
-            "c_storage": 512 * 1024, 
-            "c_CPU": 80 * simMIPS,
-            "c_RAM": 512 * 1024
+            "coverageRadius": 1000,
+            "c_storage": 256 * 1024, 
+            "c_CPU": 16 * simMIPS,
+            "c_RAM": 64 * 1024
         }
         Cloudlets.append(cloudlet)
 
