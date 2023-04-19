@@ -46,7 +46,11 @@ def readSubtraces(inputFilePath):
     root = tree.getroot()
 
     pointsPerLink = {}
+    nodes = {}
     for child in root:
+        if child.tag == 'nodes':
+            for node in child:
+                nodes[node.attrib['id']] = (node.attrib['x'], node.attrib['y'])
         if child.tag == 'links':
             for link in child:
                 latitudes = [lat for lat in link.attrib['shapeLat'].split(',')]
@@ -55,21 +59,6 @@ def readSubtraces(inputFilePath):
                     pointsPerLink[link.attrib['id']] = [(lat, lng) for lat, lng in zip(latitudes, longitudes)]
                 else:
                     fromId = link.attrib['from']
-                    fromPos = getPosFromNodeId(fromId, inputFilePath)
                     toId = link.attrib['to']
-                    toPos = getPosFromNodeId(toId, inputFilePath)
-                    pointsPerLink[link.attrib['id']] = [(fromPos[0], fromPos[1]), (toPos[0], toPos[1])]
-
-    return pointsPerLink
-
-def getPosFromNodeId(nodeId, inputFilePath):
-    tree = ET.parse(inputFilePath)
-    root = tree.getroot()
-
-    nodes = []
-    links = []
-    for child in root:
-        if child.tag == 'nodes':
-            for node in child:
-                if node.attrib['id'] == nodeId:
-                    return (node.attrib['x'], node.attrib['y'])
+                    pointsPerLink[link.attrib['id']] = [(nodes[fromId][0], nodes[fromId][1]), (nodes[toId][0], nodes[toId][1])]
+    return pointsPerLink   
