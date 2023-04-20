@@ -4,7 +4,7 @@ import sys
 from itertools import product
 import xml.etree.ElementTree as ET
 
-NUMBER_BUS_TRACES = 100
+NUMBER_BUS_TRACES = 2
 
 def readBusTraces(inputFilePath):
     print('readBustraces')
@@ -146,9 +146,9 @@ def cloudletGen(linksInputFilePath, chosenBusTraces):
             "cId": 'c' + str(c),
             "position": cloudletsPositions[c],
             "coverageRadius": 1000,
-            "c_storage": 256 * 1024, 
-            "c_CPU": 16 * simMIPS,
-            "c_RAM": 64 * 1024
+            "c_storage": 4 * 1000 * 1024, 
+            "c_CPU": 50 * simMIPS,
+            "c_RAM": 160 * 1024
         }
         Cloudlets.append(cloudlet)
         print("Cloudlet " + str(c) + " generated!")
