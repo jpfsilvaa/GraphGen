@@ -4,7 +4,7 @@ import sys
 from itertools import product
 import xml.etree.ElementTree as ET
 
-NUMBER_BUS_TRACES = 2
+NUMBER_BUS_TRACES = 6
 
 def readBusTraces(inputFilePath):
     print('readBustraces')
