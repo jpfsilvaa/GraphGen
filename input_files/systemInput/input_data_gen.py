@@ -82,33 +82,33 @@ def vmGen(vmsQtt, busFilePath):
         gp1 = {
             "vmType": 'gp1',
             "bid": random.gauss(100, 5),
-            "v_storage": 3 * 1024, 
-            "v_CPU": 2 * simMIPS, 
-            "v_RAM": 4 * 1024
+            "v_storage": random.gauss(3 * 1024, 100),
+            "v_CPU": random.gauss(2 * simMIPS, 100),
+            "v_RAM": random.gauss(4 * 1024, 100)
         }
 
         gp2 = {
             "vmType": 'gp2',
             "bid": random.gauss(100, 5),
-            "v_storage": 16 * 1024, 
-            "v_CPU": 4 * simMIPS, 
-            "v_RAM": 16 * 1024
+            "v_storage": random.gauss(16 * 1024, 100),
+            "v_CPU": random.gauss(4 * simMIPS, 100),
+            "v_RAM": random.gauss(16 * 1024, 100)
         }
 
         ramIntensive = {
             "vmType": 'ramIntensive',
             "bid": random.gauss(150, 5),
-            "v_storage": 16 * 1024, 
-            "v_CPU": 8 * simMIPS, 
-            "v_RAM": 64 * 1024
+            "v_storage": random.gauss(16 * 1024, 100),
+            "v_CPU": random.gauss(8 * simMIPS, 100),
+            "v_RAM": random.gauss(64 * 1024, 100)
         }
 
         cpuIntensive = {
             "vmType": 'cpuIntensive',
             "bid": random.gauss(150, 5),
-            "v_storage": 16 * 1024, 
-            "v_CPU": 16 * simMIPS, 
-            "v_RAM": 32 * 1024
+            "v_storage": random.gauss(16 * 1024, 100),
+            "v_CPU": random.gauss(16 * simMIPS, 100),
+            "v_RAM": random.gauss(32 * 1024, 100)
         }
 
         vmTypes = [gp1, gp2, ramIntensive, cpuIntensive]
