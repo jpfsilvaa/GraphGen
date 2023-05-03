@@ -4,10 +4,9 @@ import sys
 from itertools import product
 import xml.etree.ElementTree as ET
 
-NUMBER_BUS_TRACES = 6
+NUMBER_BUS_TRACES = 30
 
 def readBusTraces(inputFilePath):
-    print('readBustraces')
     tree = ET.parse(inputFilePath)
     root = tree.getroot()
 
@@ -24,7 +23,6 @@ def readBusTraces(inputFilePath):
     return chosenBusTraces
 
 def readSubtraces(inputFilePath):
-    print('readSubtraces')
     tree = ET.parse(inputFilePath)
     root = tree.getroot()
 
@@ -47,14 +45,12 @@ def readSubtraces(inputFilePath):
     return pointsPerLink     
 
 def getCloudletsPositions(subtraces, chosenBusTraces):
-    print('getCloudletsPositions')
     cloudletsPositions = []
     chosenSubtraces = {}
     for bus in chosenBusTraces:
         for i in range(0, len(chosenBusTraces[bus]) - 1):
             link = chosenBusTraces[bus][i] + '-' + chosenBusTraces[bus][i + 1]
             chosenSubtraces[link] = subtraces[link]
-
 
     for link in chosenSubtraces:
         for i in range(0, len(chosenSubtraces[link]), 17):
@@ -128,13 +124,9 @@ def vmGen(vmsQtt, busFilePath):
         }
 
         VMs.append(vm)
-        print("VM " + str(i) + " generated!")
-
-
     return VMs, chosenBusTraces
 
 def cloudletGen(linksInputFilePath, chosenBusTraces):
-
     subtraces = readSubtraces(linksInputFilePath)
     cloudletsPositions = getCloudletsPositions(subtraces, chosenBusTraces)
 
@@ -151,8 +143,6 @@ def cloudletGen(linksInputFilePath, chosenBusTraces):
             "c_RAM": 160 * 1024
         }
         Cloudlets.append(cloudlet)
-        print("Cloudlet " + str(c) + " generated!")
-
     return Cloudlets
 
 def build(args):
