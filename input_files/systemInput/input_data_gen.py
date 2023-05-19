@@ -4,7 +4,7 @@ import sys
 from itertools import product
 import xml.etree.ElementTree as ET
 
-NUMBER_BUS_TRACES = 3
+NUMBER_BUS_TRACES = 6
 
 def readBusTraces(inputFilePath):
     tree = ET.parse(inputFilePath)
@@ -107,7 +107,7 @@ def vmGen(vmsQtt, busFilePath):
             "v_RAM": random.gauss(32 * 1024, 100)
         }
 
-        vmTypes = [gp1, gp2]
+        vmTypes = [gp1, gp2, ramIntensive, cpuIntensive]
         chosenVm = random.choice(vmTypes)
 
         vm = {
