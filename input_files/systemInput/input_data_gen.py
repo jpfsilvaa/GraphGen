@@ -3,8 +3,20 @@ import random
 import sys
 from itertools import product
 import xml.etree.ElementTree as ET
+import heapq
 
 NUMBER_BUS_TRACES = 6
+
+def getKLargestLists(dictionary, k):
+    heap = []
+    for key, value in dictionary.items():
+        length = len(value)
+        if len(heap) < k:
+            heapq.heappush(heap, (length, key, value))
+        elif length > heap[0][0]:
+            heapq.heappushpop(heap, (length, key, value))
+    result = {item[1]: item[2] for item in heapq.nlargest(k, heap)}
+    return result
 
 def readBusTraces(inputFilePath):
     tree = ET.parse(inputFilePath)
@@ -17,9 +29,10 @@ def readBusTraces(inputFilePath):
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
-    chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
-    for bt in chosen:
-        chosenBusTraces[bt] = busTraces.pop(bt)
+    # chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
+    # for bt in chosen:
+    #    chosenBusTraces[bt] = busTraces.pop(bt)
+    chosenBusTraces = getKLargestLists(busTraces, NUMBER_BUS_TRACES)
     return chosenBusTraces
 
 def readSubtraces(inputFilePath):
@@ -58,7 +71,7 @@ def getCloudletsPositions(subtraces, chosenBusTraces):
     return cloudletsPositions
 
 def routeGen(busTrace):
-    routeJumps = random.choice(range(int(len(busTrace) / 3), len(busTrace)))
+    routeJumps = len(busTrace)
     route = []
     for i in range(routeJumps):
         route.append(busTrace[i])
