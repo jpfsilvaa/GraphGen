@@ -5,7 +5,7 @@ from itertools import product
 import xml.etree.ElementTree as ET
 import heapq
 
-NUMBER_BUS_TRACES = 6
+NUMBER_BUS_TRACES = 1
 
 def getKLargestLists(dictionary, k):
     heap = []
