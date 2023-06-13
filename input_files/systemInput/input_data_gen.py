@@ -4,6 +4,7 @@ import sys
 from itertools import product
 import xml.etree.ElementTree as ET
 import heapq
+import cloudletPosGen as cpg
 
 NUMBER_BUS_TRACES = 1
 
@@ -29,46 +30,11 @@ def readBusTraces(inputFilePath):
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
-    # chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
-    # for bt in chosen:
-    #    chosenBusTraces[bt] = busTraces.pop(bt)
-    chosenBusTraces = getKLargestLists(busTraces, NUMBER_BUS_TRACES)
+    chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
+    chosenBusTraces = {}
+    for bt in chosen:
+       chosenBusTraces[bt] = busTraces.pop(bt)
     return chosenBusTraces
-
-def readSubtraces(inputFilePath):
-    tree = ET.parse(inputFilePath)
-    root = tree.getroot()
-
-    pointsPerLink = {}
-    nodes = {}
-    for child in root:
-        if child.tag == 'nodes':
-            for node in child:
-                nodes[node.attrib['id']] = (node.attrib['x'], node.attrib['y'])
-        if child.tag == 'links':
-            for link in child:
-                latitudes = [lat for lat in link.attrib['shapeLat'].split(',')]
-                longitudes = [lng for lng in link.attrib['shapeLng'].split(',')]
-                if latitudes[0] != '' and longitudes[0] != '':
-                    pointsPerLink[link.attrib['id']] = [(lat, lng) for lat, lng in zip(latitudes, longitudes)]
-                else:
-                    fromId = link.attrib['from']
-                    toId = link.attrib['to']
-                    pointsPerLink[link.attrib['id']] = [(nodes[fromId][0], nodes[fromId][1]), (nodes[toId][0], nodes[toId][1])]
-    return pointsPerLink     
-
-def getCloudletsPositions(subtraces, chosenBusTraces):
-    cloudletsPositions = []
-    chosenSubtraces = {}
-    for bus in chosenBusTraces:
-        for i in range(0, len(chosenBusTraces[bus]) - 1):
-            link = chosenBusTraces[bus][i] + '-' + chosenBusTraces[bus][i + 1]
-            chosenSubtraces[link] = subtraces[link]
-
-    for link in chosenSubtraces:
-        for i in range(0, len(chosenSubtraces[link]), 17):
-            cloudletsPositions.append(chosenSubtraces[link][i])
-    return cloudletsPositions
 
 def routeGen(busTrace):
     routeJumps = len(busTrace)
@@ -140,8 +106,7 @@ def vmGen(vmsQtt, busFilePath):
     return VMs, chosenBusTraces
 
 def cloudletGen(linksInputFilePath, chosenBusTraces):
-    subtraces = readSubtraces(linksInputFilePath)
-    cloudletsPositions = getCloudletsPositions(subtraces, chosenBusTraces)
+    cloudletsPositions = cpg.main(chosenBusTraces)
 
     Cloudlets = []
     simMIPS = 2000
