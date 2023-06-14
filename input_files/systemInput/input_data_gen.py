@@ -64,7 +64,7 @@ def vmGen(vmsQtt, busFilePath):
 
         gp2 = {
             "vmType": 'gp2',
-            "bid": random.gauss(100, 5),
+            "bid": random.gauss(400, 5),
             "v_storage": random.gauss(16 * 1024, 100),
             "v_CPU": random.gauss(4 * simMIPS, 100),
             "v_RAM": random.gauss(16 * 1024, 100)
@@ -72,7 +72,7 @@ def vmGen(vmsQtt, busFilePath):
 
         ramIntensive = {
             "vmType": 'ramIntensive',
-            "bid": random.gauss(150, 5),
+            "bid": random.gauss(800, 10),
             "v_storage": random.gauss(16 * 1024, 100),
             "v_CPU": random.gauss(8 * simMIPS, 100),
             "v_RAM": random.gauss(64 * 1024, 100)
@@ -80,7 +80,7 @@ def vmGen(vmsQtt, busFilePath):
 
         cpuIntensive = {
             "vmType": 'cpuIntensive',
-            "bid": random.gauss(150, 5),
+            "bid": random.gauss(800, 10),
             "v_storage": random.gauss(16 * 1024, 100),
             "v_CPU": random.gauss(16 * simMIPS, 100),
             "v_RAM": random.gauss(32 * 1024, 100)
@@ -115,10 +115,10 @@ def cloudletGen(linksInputFilePath, chosenBusTraces):
         cloudlet = {
             "cId": 'c' + str(c),
             "position": cloudletsPositions[c],
-            "coverageRadius": 1000,
-            "c_storage": 4 * 1000 * 1024, 
-            "c_CPU": 50 * simMIPS,
-            "c_RAM": 160 * 1024
+            "coverageRadius": 500,
+            "c_storage": 64 * 1024, 
+            "c_CPU": 32 * simMIPS,
+            "c_RAM": 128 * 1024
         }
         Cloudlets.append(cloudlet)
     return Cloudlets

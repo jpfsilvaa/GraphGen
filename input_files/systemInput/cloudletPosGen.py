@@ -23,7 +23,7 @@ def uiGen(points, minX, minY, maxX, maxY, radius):
     plt.ylim(minY, maxY)
     plt.gca().axes.get_yaxis().set_visible(False)
     plt.gca().axes.get_xaxis().set_visible(False)
-    plt.savefig(f'instance.png')
+    plt.savefig(f'instance100.png')
     plt.show()
 
 def pointsGen(minX, minY, maxX, maxY, radius):
@@ -105,7 +105,7 @@ def main(chosenRoutes):
     nodesQuadTree = buildQuadtree(points)
     routeNodes = getRouteNodes(nodes, chosenRoutes)
 
-    closePoints = getClosePoints(nodesQuadTree, routeNodes, coverageRadius*1.5)
+    closePoints = getClosePoints(nodesQuadTree, routeNodes, coverageRadius)
     finalResult = []
     for p in closePoints:
         convertedPoint = utm.from_latlon(p.x, p.y)
