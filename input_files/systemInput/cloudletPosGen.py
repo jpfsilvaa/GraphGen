@@ -16,14 +16,14 @@ def uiGen(points, minX, minY, maxX, maxY, radius):
         # img = mpimg.imread(img_path)
         # img_size = newRadius/3
         # ax.imshow(img, extent=(x - img_size, x + img_size, y - img_size, y + img_size))
-        circle = Circle((p.x, p.y), newRadius, edgecolor='b', facecolor='none')
+        circle = Circle((p[0], p[1]), newRadius, edgecolor='b', facecolor='none')
         ax.add_patch(circle)
 
     plt.xlim(minX, maxX)
     plt.ylim(minY, maxY)
     plt.gca().axes.get_yaxis().set_visible(False)
     plt.gca().axes.get_xaxis().set_visible(False)
-    plt.savefig(f'instance100.png')
+    plt.savefig(f'instance25.png')
     plt.show()
 
 def pointsGen(minX, minY, maxX, maxY, radius):
@@ -78,8 +78,8 @@ def getClosePoints(quadtree, routeNodes, radius):
     closePoints = []
     for nodes in routeNodes.values():
         for n in nodes:
-            closePoints.extend(quadtree.query(n[0], n[1], radius))
-    return closePoints
+            closePoints.extend((p.x, p.y) for p in quadtree.query(n[0], n[1], radius))
+    return list(set(closePoints))
 
 def getRouteNodes(nodes, chosenBusTraces):
     routeNodes = {}
@@ -108,7 +108,7 @@ def main(chosenRoutes):
     closePoints = getClosePoints(nodesQuadTree, routeNodes, coverageRadius)
     finalResult = []
     for p in closePoints:
-        convertedPoint = utm.from_latlon(p.x, p.y)
+        convertedPoint = utm.from_latlon(p[0], p[1])
         finalResult.append((convertedPoint[0], convertedPoint[1]))
     print(len(finalResult))
 
