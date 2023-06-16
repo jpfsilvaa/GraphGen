@@ -117,7 +117,7 @@ def cloudletGen(linksInputFilePath, chosenBusTraces):
             "position": cloudletsPositions[c],
             "coverageRadius": 500,
             "c_storage": 144 * 1024, 
-            "c_CPU": 160 * simMIPS,
+            "c_CPU": 112 * simMIPS,
             "c_RAM": 304 * 1024
         }
         Cloudlets.append(cloudlet)
