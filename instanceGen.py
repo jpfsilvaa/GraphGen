@@ -20,14 +20,14 @@ def createGraph(graphFilePath):
         graph.addEdge(node_1, node_2, (float(distanceWeight), avgSpeed))
     return graph
 
-def main(jsonFilePath, graphFilePath):
+def main(jsonFilePath, graphFilePath, busFilePath):
     sim_utils.log(TAG, 'main')
     mainGraph = createGraph(graphFilePath)
-        
     jsonData = json_utils.readJsonInput(jsonFilePath)
     cloudlets = json_utils.buildCloudlets(jsonData['Cloudlets'])
-    users = json_utils.buildUserVms(jsonData['UserVMs'])
-    subtraces = xmlParser.readSubtraces(graphFilePath)  
+    busTraces = xmlParser.readBusTraces(busFilePath)
+    users = json_utils.buildUserVms(jsonData['UserVMs'], mainGraph, busTraces)
+    subtraces = xmlParser.readSubtraces(graphFilePath)
 
     return [cloudlets, users, mainGraph, subtraces]
 

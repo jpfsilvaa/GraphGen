@@ -37,7 +37,7 @@ def readBusTraces(inputFilePath):
     for child in root:
         if child.tag == 'bus':
             busId = child.attrib['id']
-            busTrace = [int(i) for i in child.attrib['stops'].split(',')]
+            busTrace = [i for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
     return busTraces
 

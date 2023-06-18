@@ -22,14 +22,14 @@ def buildCloudlets(jsonData):
                         )
     return cloudlets
 
-def buildUserVms(jsonData):
+def buildUserVms(jsonData, mainGraph, busTraces):
     vmsList = []
     for user in jsonData:
         vmsList.append(UserVM(str(user['vId']),
                             str(user['vmType']),
                             int(user['bid']),
                             int(user['avgSpeed']),
-                            user['initialTime'],
+                            calcTimeToInit(user, mainGraph, user['route'][0], busTraces[user['busId']]),
                             user['route'],
                             Resources(int(user['v_CPU']), 
                             int(user['v_RAM']),
@@ -37,3 +37,17 @@ def buildUserVms(jsonData):
                             )
                         )
     return vmsList
+
+def calcTimeToInit(user, mainGraph, initPosId, traces):
+    initPos = mainGraph.findNodeById(initPosId)
+    if initPos.nId == traces[0]:
+        return 0
+    
+    currNodeIdx = 0
+    arrivalTime = 0
+    while traces[currNodeIdx] != initPos.nId:
+        dist = mainGraph.adjList[traces[currNodeIdx]][traces[currNodeIdx+1]][0]
+        avgSpeed = mainGraph.getEdgeWeight(traces[currNodeIdx], traces[currNodeIdx+1])[1]
+        arrivalTime += dist // avgSpeed
+        currNodeIdx += 1
+    return arrivalTime

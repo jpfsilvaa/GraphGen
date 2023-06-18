@@ -39,8 +39,12 @@ def readBusTraces(inputFilePath):
 def routeGen(busTrace):
     routeJumps = len(busTrace)
     route = []
-    for i in range(routeJumps):
+    firstNode = random.randint(0, routeJumps // 4)
+    lastNode = random.randint(3*(routeJumps // 4), routeJumps - 1)
+    route.append(busTrace[firstNode])
+    for i in range(firstNode + 1, lastNode):
         route.append(busTrace[i])
+    route.append(busTrace[lastNode])
     return route
 
 def vmGen(vmsQtt, busFilePath):
@@ -95,7 +99,7 @@ def vmGen(vmsQtt, busFilePath):
             "bid": int(chosenVm["bid"]),
             "avgSpeed": 16,
             "initialTime": 0,
-            "route": routeGen(busTraces[chosenBus]),
+            "route": busTraces[chosenBus] if i <= (vmsQtt/4) else routeGen(busTraces[chosenBus]),
             "busId": chosenBus,
             "v_storage": chosenVm["v_storage"], 
             "v_CPU": chosenVm["v_CPU"], 
