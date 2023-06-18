@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import heapq
 import cloudletPosGen as cpg
 
-NUMBER_BUS_TRACES = 1
+NUMBER_BUS_TRACES = 4
 
 def getKLargestLists(dictionary, k):
     heap = []

@@ -11,13 +11,20 @@ def uiGen(points, minX, minY, maxX, maxY, radius):
     newRadius = radius/111111 # convert meters to degrees
     fig, ax = plt.subplots()
     img_path = 'antena.jpg'
-    for p in points:
+    colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+    colorsIndex = 0
+    drawnPoints = []
+    for k in points.keys():
         # Use this only with a small number of points
         # img = mpimg.imread(img_path)
         # img_size = newRadius/3
         # ax.imshow(img, extent=(x - img_size, x + img_size, y - img_size, y + img_size))
-        circle = Circle((p[0], p[1]), newRadius, edgecolor='b', facecolor='none')
-        ax.add_patch(circle)
+        for p in points[k]:
+            if p not in drawnPoints:
+                drawnPoints.append(p)
+                circle = Circle((p[0], p[1]), newRadius, edgecolor=colors[colorsIndex], facecolor='none')
+                ax.add_patch(circle)
+        colorsIndex += 1
 
     plt.xlim(minX, maxX)
     plt.ylim(minY, maxY)
@@ -76,10 +83,14 @@ def buildQuadtree(points):
 
 def getClosePoints(quadtree, routeNodes, radius):
     closePoints = []
-    for nodes in routeNodes.values():
+    closePointsDict = {}
+    for rId, nodes in routeNodes.items():
+        closePointsDict[rId] = []
         for n in nodes:
-            closePoints.extend((p.x, p.y) for p in quadtree.query(n[0], n[1], radius))
-    return list(set(closePoints))
+            nodesList = [(p.x, p.y) for p in quadtree.query(n[0], n[1], radius)]
+            closePointsDict[rId].extend(nodesList)
+            closePoints.extend(nodesList)
+    return closePointsDict, list(set(closePoints))
 
 def getRouteNodes(nodes, chosenBusTraces):
     routeNodes = {}
@@ -105,14 +116,14 @@ def main(chosenRoutes):
     nodesQuadTree = buildQuadtree(points)
     routeNodes = getRouteNodes(nodes, chosenRoutes)
 
-    closePoints = getClosePoints(nodesQuadTree, routeNodes, coverageRadius)
+    closePointsDict, closePoints = getClosePoints(nodesQuadTree, routeNodes, coverageRadius)
     finalResult = []
     for p in closePoints:
         convertedPoint = utm.from_latlon(p[0], p[1])
         finalResult.append((convertedPoint[0], convertedPoint[1]))
     print(len(finalResult))
 
-    uiGen(closePoints, np.amin([float(node[0]) for node in points]), 
+    uiGen(closePointsDict, np.amin([float(node[0]) for node in points]), 
                    np.amin([float(node[1]) for node in points]), 
                    np.amax([float(node[0]) for node in points]), 
                    np.amax([float(node[1]) for node in points]), 
