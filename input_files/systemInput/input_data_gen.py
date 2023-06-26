@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import heapq
 import cloudletPosGen as cpg
 
-NUMBER_BUS_TRACES = 4
+NUMBER_BUS_TRACES = 2
 
 def getKLargestLists(dictionary, k):
     heap = []
@@ -109,8 +109,8 @@ def vmGen(vmsQtt, busFilePath):
         VMs.append(vm)
     return VMs, chosenBusTraces
 
-def cloudletGen(linksInputFilePath, chosenBusTraces):
-    cloudletsPositions = cpg.main(chosenBusTraces)
+def cloudletGen(linksInputFilePath, chosenBusTraces, seed):
+    cloudletsPositions = cpg.main(chosenBusTraces, seed)
 
     Cloudlets = []
     simMIPS = 2000
@@ -118,7 +118,8 @@ def cloudletGen(linksInputFilePath, chosenBusTraces):
     for c in range(len(cloudletsPositions)):
         cloudlet = {
             "cId": 'c' + str(c),
-            "position": cloudletsPositions[c],
+            "position": [cloudletsPositions[c][0], cloudletsPositions[c][1]],
+            "lineAndcolor": cloudletsPositions[c][2],
             "coverageRadius": 500,
             "c_storage": 144 * 1024, 
             "c_CPU": 112 * simMIPS,
@@ -131,11 +132,13 @@ def build(args):
     vmsArg = int(args[0])
     linksFilePath = args[1]
     outFilePath = args[2]
-    random.seed(args[3])
+    seed = args[3]
     busFilePath = args[4]
 
+    random.seed(seed)
+
     vms, chosenBusTraces = vmGen(vmsArg, busFilePath)
-    cloudlets = cloudletGen(linksFilePath, chosenBusTraces)
+    cloudlets = cloudletGen(linksFilePath, chosenBusTraces, seed)
     mainObject = {
                     "UserVMs": vms, 
                     "Cloudlets": cloudlets
