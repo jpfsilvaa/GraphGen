@@ -6,7 +6,11 @@ import xml.etree.ElementTree as ET
 import heapq
 import cloudletPosGen as cpg
 
-NUMBER_BUS_TRACES = 2
+NUMBER_BUS_TRACES = 20
+BUS_LINES_IDS = ['274P-10-0', '4112-10-0', '4113-10-0', '4114-10-0', '4115-10-0', 
+                 'N508-11-0', '209P-10-0', '407M-10-0', '177H-10-0', '748R-10-1', 
+                 '7282-10-0', '199D-10-0', '476G-41-0', '477A-10-0', '478P-10-0', 
+                 '5705-10-0', '574A-10-0', '874T-10-0', '107T-10-0', 'N537-11-0']
 
 def getKLargestLists(dictionary, k):
     heap = []
@@ -30,10 +34,8 @@ def readBusTraces(inputFilePath):
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
             busTraces[busId] = busTrace
-    chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
-    chosenBusTraces = {}
-    for bt in chosen:
-       chosenBusTraces[bt] = busTraces.pop(bt)
+    # chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
+    chosenBusTraces = {i: busTraces[i] for i in BUS_LINES_IDS}
     return chosenBusTraces
 
 def routeGen(busTrace):

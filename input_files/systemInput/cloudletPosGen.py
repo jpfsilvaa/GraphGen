@@ -39,7 +39,7 @@ def uiGen(points, minX, minY, maxX, maxY, radius, seed):
     plt.gca().axes.get_yaxis().set_visible(False)
     plt.gca().axes.get_xaxis().set_visible(False)
     plt.savefig(f'instance20_s{seed}.png')
-    # plt.show()
+    plt.show()
 
 def pointsGen(minX, minY, maxX, maxY, radius):
     points = []
