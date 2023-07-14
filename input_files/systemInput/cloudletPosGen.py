@@ -31,7 +31,7 @@ def uiGenAll(points, minX, minY, maxX, maxY, radius, seed):
     plt.show()
 
 def uiGen(points, minX, minY, maxX, maxY, radius, seed):
-    colors = ['red', 'blue', 'green', 'orange']
+    colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'yellow']
     newRadius = radius/111111 # convert meters to degrees
     fig, ax = plt.subplots()
     img_path = 'antena.jpg'
@@ -62,7 +62,7 @@ def uiGen(points, minX, minY, maxX, maxY, radius, seed):
 def uiBusLinesGen(points, minX, minY, maxX, maxY, seed, isLine, usedColors):
     r = 0.0005
     fig, ax = plt.subplots()
-    usedColors = ['red', 'blue', 'green', 'orange']
+    colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'yellow']
     colorsIndex = 0
     drawnPoints = []
     colorsIndex = 0
