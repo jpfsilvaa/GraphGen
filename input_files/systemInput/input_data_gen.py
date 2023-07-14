@@ -20,7 +20,19 @@ NUMBER_BUS_TRACES = 4
 
 # BUS_LINES_IDS = ['8594-10-0', '2290-10-0', '5318-10-0', '6291-10-0'] # Figure_100_2
 
-BUS_LINES_IDS = ['1177-31-0', '175T-10-0', '3390-10-0', '208V-10-0']
+# BUS_LINES_IDS = ['1177-31-0', '175T-10-0', '3390-10-0', '208V-10-0']
+
+# BUS_LINES_IDS = ['7282-10-0', '199D-10-0', '847P-10-0', '8600-22-0'] # newInst100_f
+
+BUS_LINES_IDS = ['N236-11-0', '1775-10-0', '1018-10-0', '2020-10-0'] # newInst100_f2_
+
+# BUS_LINES_IDS = ['118C-10-0', '1732-10-0', '178L-10-0', '271C-10-0'] # newInst100_f3_
+
+# BUS_LINES_IDS = ['1018-10-0', '1775-10-0', '2740-10-0', '1722-10-0', '1760-10-0',
+#              '148L-10-0', '148P-10-0', '1742-10-0', '118C-10-0', '9653-10-0']  # newInst250_f
+
+# BUS_LINES_IDS = ['199D-10-0', '7272-10-0', '7725-10-0', '8400-10-0', '9050-10-0',
+#              '9181-10-0', '809N-10-0', '775A-10-0', '8019-10-0', '8026-10-0']
 
 def getKLargestLists(dictionary, k):
     heap = []
@@ -43,6 +55,8 @@ def readBusTraces(inputFilePath):
         if child.tag == 'bus':
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
+            if len(busTrace) > 45:
+                busTrace = busTrace[:45]
             busTraces[busId] = busTrace
     # chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
     chosenBusTraces = {i: busTraces[i] for i in BUS_LINES_IDS}

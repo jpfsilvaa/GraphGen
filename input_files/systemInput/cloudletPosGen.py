@@ -16,12 +16,28 @@ def generate_random_hex_colors(num_colors):
 
     return hex_colors
 
+def uiGenAll(points, minX, minY, maxX, maxY, radius, seed):
+    newRadius = radius/111111 # convert meters to degrees
+    fig, ax = plt.subplots()
+    for p in points:
+        circle = Circle((p[0], p[1]), newRadius, edgecolor='gray', facecolor='none')
+        ax.add_patch(circle)
+
+    plt.xlim(minX, maxX)
+    plt.ylim(minY, maxY)
+    plt.gca().axes.get_yaxis().set_visible(False)
+    plt.gca().axes.get_xaxis().set_visible(False)
+    plt.savefig(f'all_cls_s{seed}_cls.png')
+    plt.show()
+
 def uiGen(points, minX, minY, maxX, maxY, radius, seed):
+    colors = ['red', 'blue', 'green', 'orange']
     newRadius = radius/111111 # convert meters to degrees
     fig, ax = plt.subplots()
     img_path = 'antena.jpg'
     colorsIndex = 0
     drawnPoints = []
+    usedColors = []
     for k in points.keys():
         # Use this only with a small number of points
         # img = mpimg.imread(img_path)
@@ -30,15 +46,43 @@ def uiGen(points, minX, minY, maxX, maxY, radius, seed):
         for p in points[k]:
             if p not in drawnPoints and p != points[k][-1]:
                 drawnPoints.append(p)
-                circle = Circle((p[0], p[1]), newRadius, edgecolor=points[k][-1], facecolor='none')
+                circle = Circle((p[0], p[1]), newRadius, edgecolor=colors[colorsIndex], facecolor='none')
                 ax.add_patch(circle)
+        usedColors.append(points[k][-1])
         colorsIndex += 1
 
     plt.xlim(minX, maxX)
     plt.ylim(minY, maxY)
     plt.gca().axes.get_yaxis().set_visible(False)
     plt.gca().axes.get_xaxis().set_visible(False)
-    plt.savefig(f'instance20_s{seed}.png')
+    plt.savefig(f'instance{len(points.keys())}routes_s{seed}_cls.png')
+    plt.show()
+    return usedColors
+
+def uiBusLinesGen(points, minX, minY, maxX, maxY, seed, isLine, usedColors):
+    r = 0.0005
+    fig, ax = plt.subplots()
+    usedColors = ['red', 'blue', 'green', 'orange']
+    colorsIndex = 0
+    drawnPoints = []
+    colorsIndex = 0
+    for k in points.keys():
+        if isLine:
+            ax.plot([p[0] for p in points[k]], [p[1] for p in points[k]], color=usedColors[colorsIndex])
+        else:
+            for p in points[k]:
+                if p not in drawnPoints and p != points[k][-1]:
+                    drawnPoints.append(p)
+                    circle = Circle((p[0], p[1]), r, edgecolor=usedColors[colorsIndex], facecolor=usedColors[colorsIndex])
+                    ax.add_patch(circle)
+        colorsIndex += 1
+
+    plt.xlim(minX, maxX)
+    plt.ylim(minY, maxY)
+    plt.gca().axes.get_yaxis().set_visible(False)
+    plt.gca().axes.get_xaxis().set_visible(False)
+    text = 'lines' if isLine else 'points'
+    plt.savefig(f'instance{len(points.keys())}routes_s{seed}_{text}.png')
     plt.show()
 
 def pointsGen(minX, minY, maxX, maxY, radius):
@@ -144,11 +188,21 @@ def main(chosenRoutes, seed):
         key, val = findPointInDict(closePointsDict, p)
         color = val[-1]
         finalResult.append((convertedPoint[0], convertedPoint[1], (key, color)))
-    print(len(finalResult))
+    print(len(finalResult), 'cloudlets generated')
 
-    uiGen(closePointsDict, np.amin([float(node[0]) for node in points]), 
-                   np.amin([float(node[1]) for node in points]), 
-                   np.amax([float(node[0]) for node in points]), 
-                   np.amax([float(node[1]) for node in points]), 
+    newMinX = min([float(p[0]) for node in routeNodes.values() for p in node]) - 0.05
+    newMinY = min([float(p[1]) for node in routeNodes.values() for p in node]) - 0.05
+    newMaxX = max([float(p[0]) for node in routeNodes.values() for p in node]) + 0.05
+    newMaxY = max([float(p[1]) for node in routeNodes.values() for p in node]) + 0.05
+
+    # uiGenAll(points, newMinX, newMinY, newMaxX, newMaxY, coverageRadius, seed)
+
+    usedColors = uiGen(closePointsDict, newMinX, newMinY, newMaxX, newMaxY, 
                    coverageRadius, seed)
+
+    uiBusLinesGen(routeNodes, newMinX, newMinY, newMaxX, newMaxY, 
+                  seed, isLine=True, usedColors=usedColors)
+
+    # uiBusLinesGen(routeNodes, newMinX, newMinY, newMaxX, newMaxY, 
+    #               seed, isLine=True, usedColors=usedColors)
     return finalResult
