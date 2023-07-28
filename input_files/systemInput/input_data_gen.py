@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import heapq
 import cloudletPosGen as cpg
 
-NUMBER_BUS_TRACES = 10
+NUMBER_BUS_TRACES = 6
 # BUS_LINES_IDS = ['274P-10-0', '4112-10-0', '4113-10-0', '4114-10-0', '4115-10-0', 
 #                  'N508-11-0', '209P-10-0', '407M-10-0', '177H-10-0', '748R-10-1', 
 #                  '7282-10-0', '199D-10-0', '476G-41-0', '477A-10-0', '478P-10-0', 
@@ -31,8 +31,10 @@ NUMBER_BUS_TRACES = 10
 # BUS_LINES_IDS = ['1018-10-0', '1775-10-0', '2740-10-0', '1722-10-0', '1760-10-0',
 #              '148L-10-0', '148P-10-0', '1742-10-0', '118C-10-0', '9653-10-0']  # newInst250_f
 
-BUS_LINES_IDS = ['199D-10-0', '7272-10-0', '7725-10-0', '8400-10-0', '9050-10-0',
-             '9181-10-0', '809N-10-0', '775A-10-0', '8019-10-0', '8026-10-0'] # newInst250_f2
+# BUS_LINES_IDS = ['199D-10-0', '7272-10-0', '7725-10-0', '8400-10-0', '9050-10-0',
+#              '9181-10-0', '809N-10-0', '775A-10-0', '8019-10-0', '8026-10-0'] # newInst250_f2
+
+BUS_LINES_IDS = ['1785-10-0', '1786-10-0', '1787-10-0', '1018-10-0', '2020-10-0', '2740-10-0'] # newInst150_f
 
 def getKLargestLists(dictionary, k):
     heap = []
@@ -55,8 +57,8 @@ def readBusTraces(inputFilePath):
         if child.tag == 'bus':
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
-            if len(busTrace) > 45:
-                busTrace = busTrace[:45]
+            if len(busTrace) > 30:
+                busTrace = busTrace[:30]
             busTraces[busId] = busTrace
     # chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
     chosenBusTraces = {i: busTraces[i] for i in BUS_LINES_IDS}
