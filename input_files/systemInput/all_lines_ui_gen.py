@@ -16,6 +16,16 @@ def generate_random_hex_colors(num_colors):
 
     return hex_colors
 
+def generate_random_color_hex():
+    # Generate random RGB values in the range of 0-255
+    red = random.randint(0, 255)
+    green = random.randint(0, 255)
+    blue = random.randint(0, 255)
+
+    # Convert RGB values to hexadecimal format
+    hex_color = "#{:02x}{:02x}{:02x}".format(red, green, blue)
+    return hex_color
+
 def uiGenAll(points, minX, minY, maxX, maxY, radius, seed):
     newRadius = radius/111111 # convert meters to degrees
     fig, ax = plt.subplots()
@@ -31,8 +41,7 @@ def uiGenAll(points, minX, minY, maxX, maxY, radius, seed):
     plt.show()
 
 def uiGen(points, minX, minY, maxX, maxY, radius, seed):
-    colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 
-              'yellow', 'black', 'magenta', 'lime', 'teal', 'aqua', 'maroon', 'navy', 'silver', 'limegreen',]
+    colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'yellow']
     newRadius = radius/111111 # convert meters to degrees
     fig, ax = plt.subplots()
     img_path = 'antena.jpg'
@@ -60,21 +69,20 @@ def uiGen(points, minX, minY, maxX, maxY, radius, seed):
     plt.show()
     return usedColors
 
-def uiBusLinesGen(points, minX, minY, maxX, maxY, seed, isLine, usedColors):
+def uiBusLinesGen(points, minX, minY, maxX, maxY, seed, isLine):
     r = 0.0005
     fig, ax = plt.subplots()
-    colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 'yellow']
     colorsIndex = 0
     drawnPoints = []
     colorsIndex = 0
     for k in points.keys():
         if isLine:
-            ax.plot([p[0] for p in points[k]], [p[1] for p in points[k]], color=usedColors[colorsIndex])
+            ax.plot([p[0] for p in points[k]], [p[1] for p in points[k]], color=generate_random_color_hex())
         else:
             for p in points[k]:
                 if p not in drawnPoints and p != points[k][-1]:
                     drawnPoints.append(p)
-                    circle = Circle((p[0], p[1]), r, edgecolor=usedColors[colorsIndex], facecolor=usedColors[colorsIndex])
+                    circle = Circle((p[0], p[1]), r, edgecolor=generate_random_color_hex(), facecolor=generate_random_color_hex())
                     ax.add_patch(circle)
         colorsIndex += 1
 
@@ -164,32 +172,45 @@ def findPointInDict(pointsDict, point):
             return k,v
     return None
 
+def readBusTraces(inputFilePath):
+    tree = ET.parse(inputFilePath)
+    root = tree.getroot()
+
+    busTraces = {}
+    for child in root:
+        if child.tag == 'bus':
+            busId = child.attrib['id']
+            busTrace = [i for i in child.attrib['stops'].split(',')]
+            busTraces[busId] = busTrace
+    return busTraces
+
 def main(chosenRoutes, seed):
     random.seed(seed)
     mapFilePath = '/home/jps/GraphGenFrw/Simulator/GraphGen/BusMovementModel/raw_data/map_20171024.xml'
+    busFilePath = '/home/jps/GraphGenFrw/Simulator/GraphGen/BusMovementModel/raw_data/buses_20171024.xml'
     
     nodes = readNodes(mapFilePath)
     minX, minY, maxX, maxY = getMinMax(nodes)
     coverageRadius = 500
     points = pointsGen(minX, minY, maxX, maxY, coverageRadius)
     nodesQuadTree = buildQuadtree(points)
-    routeNodes = getRouteNodes(nodes, chosenRoutes)
+    routeNodes = getRouteNodes(nodes, readBusTraces(busFilePath))
 
-    closePointsDict, closePoints = getClosePoints(nodesQuadTree, routeNodes, coverageRadius)
-    finalResult = []
+    # closePointsDict, closePoints = getClosePoints(nodesQuadTree, routeNodes, coverageRadius)
+    # finalResult = []
 
-    colors = generate_random_hex_colors(len(closePointsDict.keys()))
-    colorIdx = 0
-    for k in closePointsDict.keys():
-        closePointsDict[k].extend([colors[colorIdx]])
-        colorIdx += 1
+    # colors = generate_random_hex_colors(len(closePointsDict.keys()))
+    # colorIdx = 0
+    # for k in closePointsDict.keys():
+    #     closePointsDict[k].extend([colors[colorIdx]])
+    #     colorIdx += 1
 
-    for p in closePoints:
-        convertedPoint = utm.from_latlon(p[0], p[1])
-        key, val = findPointInDict(closePointsDict, p)
-        color = val[-1]
-        finalResult.append((convertedPoint[0], convertedPoint[1], (key, color)))
-    print(len(finalResult), 'cloudlets generated')
+    # for p in closePoints:
+    #     convertedPoint = utm.from_latlon(p[0], p[1])
+    #     key, val = findPointInDict(closePointsDict, p)
+    #     color = val[-1]
+    #     finalResult.append((convertedPoint[0], convertedPoint[1], (key, color)))
+    # print(len(finalResult), 'cloudlets generated')
 
     newMinX = min([float(p[0]) for node in routeNodes.values() for p in node]) - 0.05
     newMinY = min([float(p[1]) for node in routeNodes.values() for p in node]) - 0.05
@@ -198,12 +219,15 @@ def main(chosenRoutes, seed):
 
     # uiGenAll(points, newMinX, newMinY, newMaxX, newMaxY, coverageRadius, seed)
 
-    usedColors = uiGen(closePointsDict, newMinX, newMinY, newMaxX, newMaxY, 
-                   coverageRadius, seed)
+    # usedColors = uiGen(closePointsDict, newMinX, newMinY, newMaxX, newMaxY, 
+    #                coverageRadius, seed)
 
     uiBusLinesGen(routeNodes, newMinX, newMinY, newMaxX, newMaxY, 
-                  seed, isLine=True, usedColors=usedColors)
+                  seed, isLine=True)
 
     # uiBusLinesGen(routeNodes, newMinX, newMinY, newMaxX, newMaxY, 
     #               seed, isLine=True, usedColors=usedColors)
-    return finalResult
+    # return finalResult
+
+if __name__ == '__main__':
+    main(1, 11)
