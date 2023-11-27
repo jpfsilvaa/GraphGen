@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import heapq
 import cloudletPosGen as cpg
 
-NUMBER_BUS_TRACES = 20
+# NUMBER_BUS_TRACES = 10
 # BUS_LINES_IDS = ['274P-10-0', '4112-10-0', '4113-10-0', '4114-10-0', '4115-10-0', 
 #                  'N508-11-0', '209P-10-0', '407M-10-0', '177H-10-0', '748R-10-1', 
 #                  '7282-10-0', '199D-10-0', '476G-41-0', '477A-10-0', '478P-10-0', 
@@ -32,11 +32,46 @@ NUMBER_BUS_TRACES = 20
 #              '148L-10-0', '148P-10-0', '1742-10-0', '118C-10-0', '9653-10-0']  # newInst250_f
 
 # BUS_LINES_IDS = ['199D-10-0', '7272-10-0', '7725-10-0', '8400-10-0', '9050-10-0',
-#              '9181-10-0', '809N-10-0', '775A-10-0', '8019-10-0', '8026-10-0'] # newInst250_f2
+            #  '9181-10-0', '809N-10-0', '775A-10-0', '8019-10-0', '8026-10-0'] # newInst250_f2
 
 # BUS_LINES_IDS = ['1785-10-0', '1786-10-0', '1787-10-0', '1018-10-0', '2020-10-0', '2740-10-0'] # newInst150_f
 
 # longest lines: ['N331-11-0', '213C-31-1', '5194-10-0', '213C-10-1', 'N536-11-0', '213C-31-0', '213C-10-0', 'N533-11-0', '7282-10-0', '477P-10-0']
+
+import xml.etree.ElementTree as ET
+
+def find_intersections(bus_lines, k):
+    intersections = set()
+
+    for i in range(len(bus_lines)):
+        for j in range(i + 1000, len(bus_lines)):
+            stops_i = set(bus_lines[i]['stops'].split(','))
+            stops_j = set(bus_lines[j]['stops'].split(','))
+            if (len(stops_i) > 60) and (len(stops_j) > 60):
+                common_stops = stops_i.intersection(stops_j)
+
+                if common_stops:
+                    intersections.add(bus_lines[i]['id'])
+                    intersections.add(bus_lines[j]['id'])
+
+                if len(intersections) >= k:
+                    return intersections
+
+    return intersections
+
+def parse_xml(xml_path):
+    tree = ET.parse(xml_path)
+    root = tree.getroot()
+    bus_lines = []
+
+    for bus_elem in root.findall('.//bus'):
+        bus_info = {
+            'id': bus_elem.attrib['id'],
+            'stops': bus_elem.attrib['stops']
+        }
+        bus_lines.append(bus_info)
+
+    return bus_lines
 
 def getKLargestLists(dictionary, k):
     heap = []
@@ -49,7 +84,7 @@ def getKLargestLists(dictionary, k):
     result = {item[1]: item[2] for item in heapq.nlargest(k, heap)}
     return result
 
-def readBusTraces(inputFilePath):
+def readBusTraces(inputFilePath, busLinesIds):
     tree = ET.parse(inputFilePath)
     root = tree.getroot()
 
@@ -59,11 +94,11 @@ def readBusTraces(inputFilePath):
         if child.tag == 'bus':
             busId = child.attrib['id']
             busTrace = [i for i in child.attrib['stops'].split(',')]
-            if len(busTrace) > 30:
-                busTrace = busTrace[:30]
+        # if len(busTrace) > 60:
+            # busTrace = busTrace[:60]
             busTraces[busId] = busTrace
     # chosen = random.sample(list(busTraces.keys()), NUMBER_BUS_TRACES)
-    chosenBusTraces = {i: busTraces[i] for i in BUS_LINES_IDS}
+    chosenBusTraces = {i: busTraces[i] for i in busLinesIds}
     return chosenBusTraces
 
 def routeGen(busTrace):
@@ -77,11 +112,11 @@ def routeGen(busTrace):
     route.append(busTrace[lastNode])
     return route
 
-def vmGen(vmsQtt, busFilePath):
+def vmGen(vmsQtt, busFilePath, busLinesIds):
     # units: storage(MB), cpu(MIPS), RAM(MB)
     VMs = []
     simMIPS = 2000
-    busTraces = readBusTraces(busFilePath)
+    busTraces = readBusTraces(busFilePath, busLinesIds)
     chosenBusTraces = {}
 
     for i in range(vmsQtt):
@@ -166,8 +201,13 @@ def build(args):
     busFilePath = args[4]
 
     random.seed(seed)
+    bus_lines = parse_xml(busFilePath)
+    k = 20
+    intersections = find_intersections(bus_lines, k)
 
-    vms, chosenBusTraces = vmGen(vmsArg, busFilePath)
+    BUS_LINES_IDS = list(intersections)
+
+    vms, chosenBusTraces = vmGen(vmsArg, busFilePath, BUS_LINES_IDS)
     cloudlets = cloudletGen(linksFilePath, chosenBusTraces, seed)
     mainObject = {
                     "UserVMs": vms, 
@@ -189,10 +229,11 @@ def validateArgs(args):
         return False
 
 def main():
-    # python data_gen.py <number of vms> <number of cloudlets> <output file path> <seed>
     args = sys.argv[1:]
     if validateArgs(args):
         build(args)
 
 if __name__ == "__main__":
     main()
+
+# python3 input_data_gen.py 1000 /home/jps/GraphGenFrw/Simulator/GraphGen/BusMovementModel/raw_data/map_20171024.xml newInst.json 11 /home/jps/GraphGenFrw/Simulator/GraphGen/BusMovementModel/raw_data/buses_20171024.xml
