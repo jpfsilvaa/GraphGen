@@ -32,7 +32,9 @@ def uiGenAll(points, minX, minY, maxX, maxY, radius, seed):
 
 def uiGen(points, minX, minY, maxX, maxY, radius, seed):
     colors = ['red', 'blue', 'green', 'orange', 'purple', 'brown', 'pink', 'gray', 'olive', 'cyan', 
-              'yellow', 'black', 'magenta', 'lime', 'teal', 'aqua', 'maroon', 'navy', 'silver', 'limegreen',]
+              'yellow', 'black', 'magenta', 'lime', 'teal', 'aqua', 'maroon', 'navy', 'silver', 'limegreen',
+              'darkgreen', 'darkblue', 'darkred', 'darkorange', 'darkcyan', 'darkmagenta', 'darkgray', 'darkkhaki', 'darkolivegreen', 'darkorchid',
+              'darkslateblue', 'darkslategray', 'darkturquoise', 'deeppink', 'deepskyblue', 'dimgray', 'dodgerblue', 'firebrick', 'floralwhite', 'forestgreen']
     newRadius = radius/111111 # convert meters to degrees
     fig, ax = plt.subplots()
     img_path = 'antena.jpg'

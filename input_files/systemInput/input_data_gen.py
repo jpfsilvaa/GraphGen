@@ -202,7 +202,7 @@ def build(args):
 
     random.seed(seed)
     bus_lines = parse_xml(busFilePath)
-    k = 20
+    k = 40
     intersections = find_intersections(bus_lines, k)
 
     BUS_LINES_IDS = list(intersections)
