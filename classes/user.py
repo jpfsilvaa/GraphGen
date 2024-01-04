@@ -7,6 +7,7 @@ class UserVM:
         self.initTime = initTime
         self.route = route
         self.busId = 0
+        self.normReq = 0
         self.maxReq = 0
         self.reqs = reqs
         self.reqsSum = 0
